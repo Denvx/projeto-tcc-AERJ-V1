@@ -1,0 +1,39 @@
+.container-fluid {
+    width: 100%;
+    min-height: 100vh !important;
+    padding: 2rem 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+[class*="col-"] {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.login-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 900px;
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: 20px !important;
+    box-shadow: 0 4px 20px var(--shadow-soft);
+    overflow: hidden !important;
+    margin: 0 auto;
+}
