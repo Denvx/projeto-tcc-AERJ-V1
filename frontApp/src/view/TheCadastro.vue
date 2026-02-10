@@ -7,22 +7,25 @@
         <p class="text-secondary mb-4">Preencha os dados para se cadastrar</p>
 
         <form @submit.prevent="handleRegistration">
+          <!-- Nome Completo -->
           <div class="mb-3">
             <label for="fullName" class="form-label">Nome Completo *</label>
             <div class="input-group">
               <input type="text" id="fullName" v-model="fullName"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', { 'is-invalid': errors.fullName }]"
+                @blur="validateField('fullName')"
+                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', { 'is-invalid': errors.fullName, 'is-valid': touched.fullName && !errors.fullName && fullName }]"
                 placeholder="Digite seu nome completo">
-              <span
-                :class="['input-group-text', 'bg-dark', 'border-secondary', { 'd-none': !errors.fullName, 'show-icon': errors.fullName }]">
-                <img src="/assets/images/icons/atencao.png" class="icon-alert">
+              <span v-if="errors.fullName" class="input-group-text bg-dark border-secondary text-danger">
+                <i class="bi bi-exclamation-circle-fill"></i>
               </span>
+             
             </div>
-            <div v-if="errors.fullName" class="invalid-feedback">
+            <div v-if="errors.fullName" class="invalid-feedback d-block">
               {{ errors.fullName }}
             </div>
           </div>
 
+          <!-- Apelido -->
           <div class="mb-3">
             <label for="nickname" class="form-label">Apelido</label>
             <input type="text" id="nickname" v-model="nickname" class="form-control bg-dark text-white border-secondary"
@@ -33,55 +36,88 @@
             <label for="email" class="form-label">Email *</label>
             <div class="input-group">
               <input type="email" id="email" v-model="email"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', { 'is-invalid': errors.email }]"
+                @input="validateEmailRealTime"
+                @blur="validateField('email')"
+                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
+                  { 'is-invalid': errors.email, 
+                    'is-valid': touched.email && !errors.email && email }]"
                 placeholder="seu.email@example.com">
-              <span
-                :class="['input-group-text', 'bg-dark', 'border-secondary', { 'd-none': !errors.email, 'show-icon': errors.email }]">
-                <img src="/assets/images/icons/atencao.png" class="icon-alert">
+              <span v-if="errors.email" class="input-group-text bg-dark border-secondary text-danger">
+                <i class="bi bi-exclamation-circle-fill"></i>
               </span>
             </div>
-            <div v-if="errors.email" class="invalid-feedback">
+            <div v-if="errors.email" class="invalid-feedback d-block">
               {{ errors.email }}
+            </div>
+            <div v-else-if="email && !isEmailValid && touched.email" class="text-warning small mt-1">
+              <i class="bi bi-info-circle"></i> Digite um email válido
+            </div>
+            <div v-else-if="isEmailValid && email" class="text-success small mt-1">
+              <i class="bi bi-check-circle"></i> Email válido!
             </div>
           </div>
 
+          <!-- Senha -->
           <div class="mb-3">
             <label for="password" class="form-label">Senha *</label>
             <div class="input-group">
               <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', { 'is-invalid': errors.password }]"
+                @input="validatePasswordRealTime"
+                @blur="validateField('password')"
+                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
+                  { 'is-invalid': errors.password,
+                    'is-valid': touched.password && !errors.password && password.length >= 6 }]"
                 placeholder="••••••••">
               <button class="btn btn-outline-secondary bg-dark text-white border-secondary" type="button"
                 @click="showPassword = !showPassword">
                 <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>
-              <span
-                :class="['input-group-text', 'bg-dark', 'border-secondary', { 'd-none': !errors.password, 'show-icon': errors.password }]">
-                <img src="/assets/images/icons/atencao.png" class="icon-alert">
+              <span v-if="errors.password" class="input-group-text bg-dark border-secondary text-danger">
+                <i class="bi bi-exclamation-circle-fill"></i>
               </span>
             </div>
-            <div v-if="errors.password" class="invalid-feedback">
+            <div v-if="errors.password" class="invalid-feedback d-block">
               {{ errors.password }}
+            </div>
+            
+            <div v-if="password && touched.password" class="mt-2">
+              <div class="d-flex gap-1 mb-1">
+                <div class="flex-fill" :class="['password-strength-bar', passwordStrength >= 1 ? 'bg-danger' : 'bg-secondary']"></div>
+                <div class="flex-fill" :class="['password-strength-bar', passwordStrength >= 2 ? 'bg-warning' : 'bg-secondary']"></div>
+                <div class="flex-fill" :class="['password-strength-bar', passwordStrength >= 3 ? 'bg-success' : 'bg-secondary']"></div>
+              </div>
+              <small :class="passwordStrengthText.class">{{ passwordStrengthText.text }}</small>
             </div>
           </div>
 
+          <!-- Confirmar Senha -->
           <div class="mb-3">
             <label for="confirmPassword" class="form-label">Confirmar Senha *</label>
             <div class="input-group">
               <input :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" v-model="confirmPassword"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', { 'is-invalid': errors.confirmPassword }]"
+                @input="validateConfirmPasswordRealTime"
+                @blur="validateField('confirmPassword')"
+                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
+                  { 'is-invalid': errors.confirmPassword,
+                    'is-valid': touched.confirmPassword && !errors.confirmPassword && confirmPassword && password === confirmPassword }]"
                 placeholder="••••••••">
               <button class="btn btn-outline-secondary bg-dark text-white border-secondary" type="button"
                 @click="showConfirmPassword = !showConfirmPassword">
                 <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>
-              <span
-                :class="['input-group-text', 'bg-dark', 'border-secondary', { 'd-none': !errors.confirmPassword, 'show-icon': errors.confirmPassword }]">
-                <img src="/assets/images/icons/atencao.png" class="icon-alert">
+              <span v-if="errors.confirmPassword" class="input-group-text bg-dark border-secondary text-danger">
+                <i class="bi bi-exclamation-circle-fill"></i>
               </span>
+            
             </div>
-            <div v-if="errors.confirmPassword" class="invalid-feedback">
+            <div v-if="errors.confirmPassword" class="invalid-feedback d-block">
               {{ errors.confirmPassword }}
+            </div>
+            <div v-else-if="confirmPassword && password !== confirmPassword && touched.confirmPassword" class="text-warning small mt-1">
+              <i class="bi bi-exclamation-triangle"></i> As senhas não coincidem
+            </div>
+            <div v-else-if="password === confirmPassword && confirmPassword" class="text-success small mt-1">
+              <i class="bi bi-check-circle"></i> Senhas coincidem!
             </div>
           </div>
 
@@ -115,8 +151,14 @@
             <span class="text-white-50 small">Soluções Inteligentes para Mobilidade</span>
           </p>
           <div class="d-flex align-items-center gap-2 mt-3">
-            <img v-for="(avatar, index) in teamAvatars" :key="index" :src="avatar" class="rounded-circle" width="40"
-              height="40" alt="Team member">
+            <img v-for="(avatar, index) in teamAvatars" 
+                 :key="index" 
+                 :src="avatar" 
+                 class="rounded-circle border border-white" 
+                 width="40"
+                 height="40" 
+                 alt="Team member"
+                 @error="handleImageError">
           </div>
         </div>
       </div>
@@ -131,6 +173,7 @@
 <script>
 import { registerAuth } from "@/services/authService";
 import { createUserProfile } from "@/services/userService";
+import denver from '@/assets/images/denver.jpg';
 
 export default {
   name: 'CadastroAERJ',
@@ -144,16 +187,16 @@ export default {
       confirmPassword: '',
       showPassword: false,
       showConfirmPassword: false,
+      isEmailValid: false,
 
       alert: {
         show: false,
         message: '',
         type: ''
       },
+      
       teamAvatars: [
-        'https://randomuser.me/api/portraits/men/32.jpg',
-        'https://randomuser.me/api/portraits/women/45.jpg',
-        'https://randomuser.me/api/portraits/men/56.jpg'
+        denver
       ],
 
       errors: {
@@ -161,11 +204,49 @@ export default {
         email: '',
         password: '',
         confirmPassword: ''
+      },
+
+      touched: {
+        fullName: false,
+        email: false,
+        password: false,
+        confirmPassword: false
       }
     };
   },
 
+  computed: {
+    passwordStrength() {
+      if (!this.password) return 0;
+      
+      let strength = 0;
+      
+      if (this.password.length >= 6) strength++;
+      if (this.password.length >= 8) strength++;
+      if (/[A-Z]/.test(this.password) && /[a-z]/.test(this.password)) strength++;
+      if (/[0-9]/.test(this.password)) strength++;
+      if (/[^A-Za-z0-9]/.test(this.password)) strength++;
+      
+      return Math.min(strength, 3);
+    },
+
+    passwordStrengthText() {
+      const texts = {
+        0: { text: '', class: '' },
+        1: { text: 'Senha fraca', class: 'text-danger' },
+        2: { text: 'Senha média', class: 'text-warning' },
+        3: { text: 'Senha forte', class: 'text-success' }
+      };
+      return texts[this.passwordStrength];
+    }
+  },
+
   methods: {
+    handleImageError(event) {
+      console.error('Erro ao carregar imagem:', event.target.src);
+      event.target.src = 'https://via.placeholder.com/40';
+    },
+
     showAlert(message, type = 'error') {
       this.alert.message = message;
       this.alert.type = type;
@@ -179,6 +260,90 @@ export default {
     validateEmail(email) {
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return regex.test(email);
+    },
+
+    // Validação de email em tempo real
+    validateEmailRealTime() {
+      this.touched.email = true;
+      this.isEmailValid = this.validateEmail(this.email);
+      
+      if (this.email && !this.isEmailValid) {
+        this.errors.email = '';
+      } else {
+        this.errors.email = '';
+      }
+    },
+
+    // Validação de senha em tempo real
+    validatePasswordRealTime() {
+      this.touched.password = true;
+      
+      if (this.password && this.password.length < 6) {
+        this.errors.password = '';
+      } else {
+        this.errors.password = '';
+      }
+
+      // Revalidar confirmação se já foi preenchida
+      if (this.confirmPassword) {
+        this.validateConfirmPasswordRealTime();
+      }
+    },
+
+    // Validação de confirmação de senha em tempo real
+    validateConfirmPasswordRealTime() {
+      this.touched.confirmPassword = true;
+      
+      if (this.confirmPassword && this.password !== this.confirmPassword) {
+        this.errors.confirmPassword = '';
+      } else {
+        this.errors.confirmPassword = '';
+      }
+    },
+
+    // Validação ao sair do campo
+    validateField(field) {
+      this.touched[field] = true;
+
+      switch(field) {
+        case 'fullName':
+          if (!this.fullName.trim()) {
+            this.errors.fullName = 'Por favor, insira seu nome completo';
+          } else {
+            this.errors.fullName = '';
+          }
+          break;
+        
+        case 'email':
+          if (!this.email) {
+            this.errors.email = 'Email é obrigatório';
+          } else if (!this.validateEmail(this.email)) {
+            this.errors.email = 'Email inválido';
+          } else {
+            this.errors.email = '';
+          }
+          break;
+        
+        case 'password':
+          if (!this.password) {
+            this.errors.password = 'Senha é obrigatória';
+          } else if (this.password.length < 6) {
+            this.errors.password = 'Senha deve ter no mínimo 6 caracteres';
+          } else {
+            this.errors.password = '';
+          }
+          break;
+        
+        case 'confirmPassword':
+          if (!this.confirmPassword) {
+            this.errors.confirmPassword = 'Confirme sua senha';
+          } else if (this.password !== this.confirmPassword) {
+            this.errors.confirmPassword = 'As senhas não coincidem';
+          } else {
+            this.errors.confirmPassword = '';
+          }
+          break;
+      }
     },
 
     validateForm() {
@@ -214,7 +379,7 @@ export default {
       return valid;
     },
 
-    async handleRegistzration() {
+    async handleRegistration() {
       if (!this.validateForm()) return;
 
       try {
@@ -242,14 +407,20 @@ export default {
           this.showAlert('Senha muito fraca.', 'error');
         } else {
           this.showAlert('Erro inesperado. Tente novamente.', 'error');
-          console.log(error);
+          console.error(error);
         }
       }
     }
   }
 };
-
-
 </script>
 
 <style src="@/assets/styles/cadastro.css"></style>
+
+<style scoped>
+.password-strength-bar {
+  height: 4px;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+</style>

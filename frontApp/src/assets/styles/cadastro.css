@@ -355,6 +355,20 @@ a:hover {
     background-color: #f39c12;
 }
 
+.form-control.is-valid {
+  border-color: #198754 !important;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.password-strength-bar {
+  height: 4px;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;
