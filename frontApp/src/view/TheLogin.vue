@@ -8,62 +8,55 @@
         <p class="text-secondary mb-4">Faça login com sua conta</p>
 
         <form @submit.prevent="handleLogin">
+
           <!-- Email -->
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <div class="input-group">
-              <input type="email" id="email" v-model="email"
-                @input="validateEmailRealTime"
-                @blur="validateField('email')"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
-                  { 'is-invalid': errors.email, 
-                    'is-valid': touched.email && !errors.email && email }]"
-                placeholder="example.vigiamed@example.com">
-              <span v-if="errors.email" class="input-group-text bg-dark border-secondary text-danger">
-                <i class="bi bi-exclamation-circle-fill"></i>
-              </span>
-              <span v-else-if="touched.email && isEmailValid && email" class="input-group-text bg-dark border-secondary text-success">
-                <i class="bi bi-check-circle-fill"></i>
-              </span>
+              <input type="email" id="email" v-model="email" @input="onInputEmail" @blur="validateField('email')"
+                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary',
+                  {
+                    'is-invalid': errors.email,
+                    'is-valid': touched.email && !errors.email && email
+                  }
+                ]" placeholder="example.vigiamed@example.com">
             </div>
+
             <div v-if="errors.email" class="invalid-feedback d-block">
               {{ errors.email }}
             </div>
-            <div v-else-if="email && !isEmailValid && touched.email" class="text-warning small mt-1">
-              <i class="bi bi-info-circle"></i> Digite um email válido
-            </div>
-            <div v-else-if="isEmailValid && email" class="text-success small mt-1">
+
+            <div v-else-if="!errors.email && email" class="text-success small mt-1">
               <i class="bi bi-check-circle"></i> Email válido!
             </div>
           </div>
 
+
           <!-- Campo Senha -->
           <div class="mb-3">
             <label for="password" class="form-label">Senha</label>
+
             <div class="input-group">
               <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password"
-                @input="validatePasswordRealTime"
-                @blur="validateField('password')"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
-                  { 'is-invalid': errors.password,
-                    'is-valid': touched.password && !errors.password && password.length >= 6 }]"
-                placeholder="••••••••">
+                @input="onInputPassword" @blur="validateField('password')" :class="['form-control', 'bg-dark', 'text-white', 'border-secondary',
+                  {
+                    'is-invalid': errors.password,
+                    'is-valid': touched.password && !errors.password && password
+                  }
+                ]" placeholder="••••••••">
+
               <button class="btn btn-outline-secondary bg-dark text-white border-secondary" type="button"
                 @click="showPassword = !showPassword">
                 <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>
-              <span v-if="errors.password" class="input-group-text bg-dark border-secondary text-danger">
-                <i class="bi bi-exclamation-circle-fill"></i>
-              </span>
-              <span v-else-if="touched.password && password.length >= 6" class="input-group-text bg-dark border-secondary text-success">
-                <i class="bi bi-check-circle-fill"></i>
-              </span>
             </div>
+
             <div v-if="errors.password" class="invalid-feedback d-block">
               {{ errors.password }}
             </div>
-            <div v-else-if="password && password.length < 6 && touched.password" class="text-warning small mt-1">
-              <i class="bi bi-info-circle"></i> Senha deve ter no mínimo 6 caracteres
+
+            <div v-else-if="!errors.password && password" class="text-success small mt-1">
+              <i class="bi bi-check-circle"></i> Senha válida!
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-2">
@@ -73,11 +66,13 @@
                   Lembre de mim
                 </label>
               </div>
+
               <a href="#" class="text-success text-decoration-none" @click.prevent="openResetModal">
                 Esqueceu a senha?
               </a>
             </div>
           </div>
+
 
           <button type="submit" class="btn btn-success w-100 mt-3">
             <i class="fas fa-sign-in-alt"></i> Entrar
@@ -124,14 +119,9 @@
             <span class="text-white-50 small">Soluções Inteligentes para Mobilidade</span>
           </p>
           <div class="d-flex align-items-center gap-2 mt-3">
-            <img v-for="(avatar, index) in teamAvatars" 
-                 :key="index" 
-                 :src="avatar" 
-                 class="rounded-circle border border-white" 
-                 width="40"
-                 height="40" 
-                 alt="Team member"
-                 @error="handleImageError">
+            <img v-for="(avatar, index) in teamAvatars" :key="index" :src="avatar"
+              class="rounded-circle border border-white" width="40" height="40" alt="Team member"
+              @error="handleImageError">
           </div>
         </div>
       </div>
@@ -139,11 +129,7 @@
     </div>
 
     <!-- Popup de Recuperação de Senha -->
-    <ResetPasswordModal 
-      :show="showResetModal" 
-      @close="closeResetModal"
-      @alert="handleModalAlert" 
-    />
+    <ResetPasswordModal :show="showResetModal" @close="closeResetModal" @alert="handleModalAlert" />
 
     <!-- Toast de Alerta -->
     <div v-if="alert.show" class="alert-toast" :class="alert.type">
@@ -153,10 +139,15 @@
 </template>
 
 <script>
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase/firebaseConfig";
+import { loginAuth } from '@/services/authService';
+import { getUserData } from '@/services/userService';
 import ResetPasswordModal from '@/components/ResetPasswordModal.vue';
 import denver from '@/assets/images/denver.jpg';
+
+import { limitEntry } from '@/utils/helpers/limitEntry';
+import { LIMITS } from '@/utils/validators/limits';
+import { validateEmail } from '@/utils/validators/email';
+import { validatePassword } from '@/utils/validators/password';
 
 export default {
   name: 'LoginAERJ',
@@ -171,18 +162,16 @@ export default {
       password: '',
       rememberMe: false,
       showPassword: false,
-      isEmailValid: false,
       showResetModal: false,
+      isLoading: false, // ✅ Estado de loading
 
       alert: {
         show: false,
         message: '',
         type: ''
       },
-      
-      teamAvatars: [
-        denver
-      ],
+
+      teamAvatars: [denver],
 
       errors: {
         email: '',
@@ -198,14 +187,58 @@ export default {
 
   methods: {
     handleImageError(event) {
-      console.error('Erro ao carregar imagem:', event.target.src);
-      event.target.src = 'https://ui-avatars.com/api/?name=AERJ&background=198754&color=fff&size=40';
+      event.target.src =
+        'https://ui-avatars.com/api/?name=AERJ&background=198754&color=fff&size=40';
     },
 
+    // ===== INPUT HANDLERS =====
+
+    onInputEmail() {
+      this.email = limitEntry(this.email, LIMITS.EMAIL).trim();
+      const { error } = validateEmail(this.email);
+      this.errors.email = error;
+    },
+
+    onInputPassword() {
+      this.password = limitEntry(this.password, LIMITS.PASSWORD);
+      this.touched.password = true;
+      const { error } = validatePassword(this.password);
+      this.errors.password = error;
+    },
+
+    // ===== FIELD VALIDATION =====
+
+    validateField(field) {
+      this.touched[field] = true;
+
+      if (field === 'email') {
+        const { error } = validateEmail(this.email);
+        this.errors.email = error || (!this.email ? 'Email é obrigatório' : '');
+      }
+
+      if (field === 'password') {
+        const { error } = validatePassword(this.password);
+        this.errors.password = error || (!this.password ? 'Senha é obrigatória' : '');
+      }
+    },
+
+    validateForm() {
+      const emailValidation = validateEmail(this.email);
+      const passwordValidation = validatePassword(this.password);
+
+      this.errors.email =
+        emailValidation.error || (!this.email ? 'Email é obrigatório' : '');
+
+      this.errors.password =
+        passwordValidation.error || (!this.password ? 'Senha é obrigatória' : '');
+
+      return !this.errors.email && !this.errors.password;
+    },
+
+    // ===== ALERT SYSTEM =====
+
     showAlert(message, type = 'error') {
-      this.alert.message = message;
-      this.alert.type = type;
-      this.alert.show = true;
+      this.alert = { show: true, message, type };
 
       setTimeout(() => {
         this.alert.show = false;
@@ -216,6 +249,8 @@ export default {
       this.showAlert(alertData.message, alertData.type);
     },
 
+    // ===== RESET PASSWORD MODAL =====
+
     openResetModal() {
       this.showResetModal = true;
     },
@@ -224,118 +259,68 @@ export default {
       this.showResetModal = false;
     },
 
-    validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    },
-
-    validateEmailRealTime() {
-      this.touched.email = true;
-      this.isEmailValid = this.validateEmail(this.email);
-      
-      if (this.email && !this.isEmailValid) {
-        this.errors.email = '';
-      } else {
-        this.errors.email = '';
-      }
-    },
-
-    validatePasswordRealTime() {
-      this.touched.password = true;
-      
-      if (this.password && this.password.length < 6) {
-        this.errors.password = '';
-      } else {
-        this.errors.password = '';
-      }
-    },
-
-    validateField(field) {
-      this.touched[field] = true;
-
-      switch(field) {
-        case 'email':
-          if (!this.email) {
-            this.errors.email = 'Email é obrigatório';
-          } else if (!this.validateEmail(this.email)) {
-            this.errors.email = 'Email inválido';
-          } else {
-            this.errors.email = '';
-          }
-          break;
-        
-        case 'password':
-          if (!this.password) {
-            this.errors.password = 'Senha é obrigatória';
-          } else if (this.password.length < 6) {
-            this.errors.password = 'Senha deve ter no mínimo 6 caracteres';
-          } else {
-            this.errors.password = '';
-          }
-          break;
-      }
-    },
-
-    validateForm() {
-      this.errors = {
-        email: '',
-        password: ''
-      };
-
-      let valid = true;
-
-      if (!this.email || !this.validateEmail(this.email)) {
-        this.errors.email = 'Email inválido';
-        valid = false;
-      }
-
-      if (!this.password || this.password.length < 6) {
-        this.errors.password = 'Senha deve ter no mínimo 6 caracteres';
-        valid = false;
-      }
-
-      return valid;
-    },
-
     async handleLogin() {
-      if (!this.validateForm()) return;
+      if (!this.validateForm()) {
+        this.showAlert('Por favor, corrija os erros no formulário.');
+        return;
+      }
+
+      this.isLoading = true;
 
       try {
-        await signInWithEmailAndPassword(auth, this.email, this.password);
+        const user = await loginAuth(this.email, this.password);
+        const userData = await getUserData(user.uid);
 
+        if (!userData) {
+          throw new Error('Perfil do usuário não encontrado');
+        }
         this.showAlert('Login realizado com sucesso!', 'success');
-
+        
         setTimeout(() => {
-          this.$router.push({ name: 'home' });
-        }, 1500);
+          const targetRoute = userData.isAdmin ? 'dashAdmin' : 'dashAlunos';
+          this.$router.push({ name: targetRoute });
+        }, 1000);
 
       } catch (error) {
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-          this.showAlert('Email ou senha incorretos.', 'error');
-        } else if (error.code === 'auth/wrong-password') {
-          this.showAlert('Senha incorreta.', 'error');
-        } else if (error.code === 'auth/too-many-requests') {
-          this.showAlert('Muitas tentativas. Tente novamente mais tarde.', 'error');
-        } else {
-          this.showAlert('Erro ao fazer login.', 'error');
-          console.error(error);
-        }
+        this.handleLoginError(error);
+      } finally {
+        this.isLoading = false;
       }
     },
 
+    handleLoginError(error) {
+      const errorMessages = {
+        'auth/user-not-found': 'Email não cadastrado.',
+        'auth/invalid-credential': 'Email ou senha incorretos.',
+        'auth/wrong-password': 'Senha incorreta.',
+        'auth/invalid-email': 'Email inválido.',
+        'auth/user-disabled': 'Esta conta foi desativada.',
+        'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
+        'auth/network-request-failed': 'Erro de conexão. Verifique sua internet.'
+      };
+
+      const message = errorMessages[error.code] || 'Erro ao fazer login. Tente novamente.';
+      
+      this.showAlert(message);
+      console.error('Erro no login:', error);
+    },
+
+    // ===== SOCIAL LOGIN (FUTURO) =====
+
     loginGoogle() {
-      this.showAlert('Login com Google em desenvolvimento.', 'error');
+      this.showAlert('Login com Google em desenvolvimento.', 'info');
     },
 
     loginApple() {
-      this.showAlert('Login com Apple em desenvolvimento.', 'error');
+      this.showAlert('Login com Apple em desenvolvimento.', 'info');
     },
 
     loginFacebook() {
-      this.showAlert('Login com Facebook em desenvolvimento.', 'error');
+      this.showAlert('Login com Facebook em desenvolvimento.', 'info');
     }
   }
 };
 </script>
+
 
 <style src="@/assets/styles/login.css"></style>

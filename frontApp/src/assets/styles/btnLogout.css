@@ -1,0 +1,148 @@
+/* ===== BASE STYLES ===== */
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.logout-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== SIZES ===== */
+.logout-button--sm {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  gap: 6px;
+}
+
+.logout-button--sm .logout-button__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.logout-button--md {
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+.logout-button--lg {
+  padding: 12px 24px;
+  font-size: 1.125rem;
+  gap: 10px;
+}
+
+.logout-button--lg .logout-button__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ===== VARIANTS ===== */
+
+/* Primary */
+.logout-button--primary {
+  background: #dc3545;
+  color: white;
+}
+
+.logout-button--primary:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.logout-button--primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Secondary */
+.logout-button--secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.logout-button--secondary:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+/* Danger (mais vermelho) */
+.logout-button--danger {
+  background: #bd2130;
+  color: white;
+}
+
+.logout-button--danger:hover:not(:disabled) {
+  background: #a71d2a;
+}
+
+/* Ghost (transparente) */
+.logout-button--ghost {
+  background: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.logout-button--ghost:hover:not(:disabled) {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: #c82333;
+}
+
+/* Icon Only */
+.logout-button--icon {
+  padding: 8px;
+  background: transparent;
+  color: #6c757d;
+}
+
+.logout-button--icon:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+  color: #dc3545;
+}
+
+.logout-button--icon-only {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+
+/* ===== LOADING SPINNER ===== */
+.logout-button__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .logout-button--md {
+    padding: 8px 12px;
+    font-size: 0.875rem;
+  }
+
+  .logout-button__text {
+    display: none;
+  }
+
+  .logout-button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+}
