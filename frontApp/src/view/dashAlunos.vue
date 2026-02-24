@@ -1,112 +1,210 @@
 <template>
-  <main class="min-h-screen bg-slate-50 p-6 md:p-10 relative">
-    <!-- Botão de Logout fixo no canto superior direito -->
-    <div class="fixed top-6 right-6 z-50">
-      <button
-        @click="handleLogout"
-        :disabled="isLoading"
-        class="flex items-center gap-2 px-4 py-2 bg-white text-red-600 border border-red-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        <span v-if="isLoading" class="spinner"></span>
-        <svg 
-          v-else
-          xmlns="http://www.w3.org/2000/svg" 
-          width="18" 
-          height="18" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          stroke-width="2" 
-          stroke-linecap="round" 
-          stroke-linejoin="round"
+  <div class="dashboard">
+
+    <!-- Sidebar (desktop) -->
+    <div class="dashboard__sidebar">
+      <AppSidebar
+        :user="sidebarUser"
+        @logout="handleLogout"
+      />
+    </div>
+
+    <!-- Main -->
+    <main class="dashboard__main">
+
+      <!-- Header desktop -->
+      <div class="dashboard__header-desktop">
+        <AppHeader
+          :user="headerUser"
+          :breadcrumb="breadcrumb"
+          :has-notifications="hasNotifications"
+          @open-notifications="handleOpenNotifications"
+        />
+      </div>
+
+      <!-- Header mobile -->
+      <div class="dashboard__mobile-header">
+        <div class="mobile-header">
+          <div class="mobile-header__top">
+            <div class="mobile-header__user">
+              <div class="mobile-header__avatar">
+                <img v-if="headerUser.avatar" :src="headerUser.avatar" :alt="headerUser.name" />
+                <span v-else>{{ initials }}</span>
+              </div>
+              <div>
+                <p class="mobile-header__greeting">Bem-vinda,</p>
+                <p class="mobile-header__name">{{ headerUser.name }}</p>
+              </div>
+            </div>
+            <button class="mobile-header__bell" @click="handleOpenNotifications">
+              <span class="material-symbols-outlined">notifications</span>
+              <span v-if="hasNotifications" class="mobile-header__bell-dot"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conteúdo -->
+      <div class="dashboard__content">
+
+        <!-- Cards do topo -->
+        <div class="dashboard__cards">
+          <NextTripCard
+            :trip="nextTrip"
+            @view-details="handleViewDetails"
+          />
+          <PresenceRateCard
+            :rate="presenceRate"
+            :goal="presenceGoal"
+          />
+        </div>
+
+        <!-- Confirmar presença -->
+        <ConfirmPresence
+          :trip="nextTrip"
+          @confirm="handleConfirm"
+          @decline="handleDecline"
+        />
+
+        <!-- Histórico -->
+        <HistoryTable
+          :history="tripHistory"
+          @view-all="handleViewAll"
+        />
+
+      </div>
+    </main>
+
+    <!-- Nav inferior mobile -->
+    <div class="dashboard__bottom-nav">
+      <nav class="bottom-nav">
+        <router-link
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="bottom-nav__item"
+          active-class="active"
         >
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-        <span class="font-medium">{{ isLoading ? 'Saindo...' : 'Sair' }}</span>
-      </button>
+          <span class="material-symbols-outlined">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </router-link>
+      </nav>
     </div>
 
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-slate-800 tracking-tight">
-        Fala, <span class="text-indigo-600">{{ studentName }}</span>! 👋
-      </h1>
-      <p class="text-slate-500 mt-2">Pronto para continuar seus estudos na AERJ?</p>
-    </header>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-        <h3 class="font-semibold text-slate-700 mb-4">Seu Progresso Total</h3>
-        <div class="w-full bg-slate-100 rounded-full h-4 mb-2">
-          <div 
-            class="bg-indigo-500 h-4 rounded-full transition-all duration-500" 
-            :style="{ width: progress + '%' }"
-          ></div>
-        </div>
-        <p class="text-sm text-slate-500 text-right">{{ progress }}% concluído</p>
-      </section>
-
-      <section class="md:col-span-2 bg-indigo-600 p-6 rounded-2xl text-white flex justify-between items-center overflow-hidden relative">
-        <div class="z-10">
-          <h3 class="text-xl font-bold mb-2">Novos materiais disponíveis</h3>
-          <p class="text-indigo-100 mb-4">Confira as atualizações na sua trilha.</p>
-          <button class="bg-white text-indigo-600 px-6 py-2 rounded-lg font-bold hover:bg-indigo-50 transition-colors">
-            Acessar trilha
-          </button>
-        </div>
-        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500 rounded-full opacity-50"></div>
-      </section>
-
-    </div>
-  </main>
+  </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { logoutAuth } from '@/services/authService'
-import { clearUserCache } from '@/services/userService'
+<script>
+import AppSidebar       from '@/components/AppSidebar.vue'
+import AppHeader        from '@/components/AppHeader.vue'
+import NextTripCard     from '@/components/NextTripCard.vue'
+import PresenceRateCard from '@/components/PresenceRateCard.vue'
+import ConfirmPresence  from '@/components/ConfirmPresence.vue'
+import HistoryTable     from '@/components/HistoryTable.vue'
 
-const router = useRouter()
+export default {
+  name: 'DashAlunos',
 
-const studentName = ref('Denver')
-const progress = ref(75)
-const isLoading = ref(false)
+  components: {
+    AppSidebar,
+    AppHeader,
+    NextTripCard,
+    PresenceRateCard,
+    ConfirmPresence,
+    HistoryTable,
+  },
 
-const handleLogout = async () => {
-  const confirmed = window.confirm('Tem certeza que deseja sair?')
-  if (!confirmed) return
+  data() {
+    return {
+      sidebarUser: {
+        name: 'Ricardo Silva',
+        role: 'Pai do Aluno',
+        avatar: '',
+      },
 
-  isLoading.value = true
+      headerUser: {
+        name: 'Maria Silva Santos',
+        role: 'Passageiro',
+        avatar: '',
+      },
 
-  try {
-    await logoutAuth()
-    clearUserCache()
-    await router.push({ name: 'login' })
-  } catch (error) {
-    console.error('Erro ao fazer logout:', error)
-    alert('Erro ao sair. Tente novamente.')
-  } finally {
-    isLoading.value = false
-  }
+      breadcrumb: {
+        parent: 'Dashboard',
+        current: 'Visão Geral',
+      },
+
+      hasNotifications: true,
+
+      navItems: [
+        { to: '/dashAlunos',    icon: 'dashboard',      label: 'Dashboard'    },
+        { to: '/viagens',       icon: 'directions_bus', label: 'Viagens'      },
+        { to: '/estatisticas',  icon: 'bar_chart',      label: 'Estatísticas' },
+        { to: '/perfil',        icon: 'person',         label: 'Perfil'       },
+        { to: '/configuracoes', icon: 'settings',       label: 'Config'       },
+      ],
+
+      nextTrip: {
+        date: '16/02',
+        dayLabel: 'sexta-feira',
+        fullDate: '16 de Fevereiro',
+        origin: 'Centro',
+        destination: 'Barra',
+        departure: '07:30',
+        return: '18:00',
+      },
+
+      presenceRate: 80,
+      presenceGoal: 90,
+
+      tripHistory: [
+        { date: '14/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
+        { date: '12/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
+        { date: '09/02/2024', route: 'Centro → Barra', type: 'Só Ida',      attended: false },
+        { date: '07/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
+        { date: '05/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
+      ],
+    }
+  },
+
+  computed: {
+    initials() {
+      return this.headerUser.name
+        .split(' ')
+        .map(n => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase()
+    },
+  },
+
+  methods: {
+    handleLogout() {
+      this.$router.push('/login')
+    },
+
+    handleOpenNotifications() {
+      console.log('Abrir notificações')
+    },
+
+    handleViewDetails(trip) {
+      console.log('Ver detalhes:', trip)
+    },
+
+    handleConfirm({ trip, tripType }) {
+      console.log('Presença confirmada:', { trip, tripType })
+    },
+
+    handleDecline() {
+      console.log('Usuário não irá na viagem')
+    },
+
+    handleViewAll() {
+      this.$router.push('/viagens')
+    },
+  },
 }
 </script>
 
 <style scoped>
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { 
-    transform: rotate(360deg); 
-  }
-}
+@import '@/assets/styles/dashAlunos.css';
 </style>

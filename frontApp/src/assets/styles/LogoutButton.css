@@ -1,0 +1,23 @@
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.logout-button__icon {
+  display: flex;
+  align-items: center;
+}
+
+.logout-button--icon-only {
+  padding: 6px;
+}
+
+.logout-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

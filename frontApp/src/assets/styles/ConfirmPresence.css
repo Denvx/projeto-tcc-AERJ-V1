@@ -1,0 +1,276 @@
+/* ===========================
+   ConfirmPresence
+   =========================== */
+
+.confirm {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.confirm__inner {
+  padding: 2rem;
+}
+
+.confirm__content {
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Cabeçalho */
+.confirm__heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.confirm__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.confirm__today-badge {
+  display: none;
+}
+
+.confirm__subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+/* Detalhes da viagem */
+.confirm__details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #f1f5f9;
+}
+
+.confirm__detail-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.confirm__detail-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Rota com ícone (mobile) */
+.confirm__route-mobile {
+  display: none;
+}
+
+.confirm__route-icon {
+  height: 3rem;
+  width: 3rem;
+  background-color: #0a111e;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.confirm__route-info {
+  text-align: left;
+}
+
+.confirm__route-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.confirm__route-time {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.125rem;
+}
+
+/* Seleção de trajeto */
+.confirm__trip-question {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+.confirm__options {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.confirm__option {
+  cursor: pointer;
+  flex: 1;
+  max-width: 140px;
+}
+
+.confirm__option input {
+  display: none;
+}
+
+.confirm__option-label {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #64748b;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.confirm__option input:checked + .confirm__option-label {
+  border-color: #0a111e;
+  background-color: #0a111e;
+  color: #ffffff;
+}
+
+/* Ações */
+.confirm__actions {
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.confirm__btn-confirm {
+  width: 100%;
+  max-width: 24rem;
+  background-color: #0a111e;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 14px rgba(10, 17, 30, 0.2);
+  font-family: inherit;
+}
+
+.confirm__btn-confirm:hover {
+  background-color: #1e293b;
+}
+
+.confirm__btn-decline {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.confirm__btn-decline:hover {
+  color: #ef4444;
+}
+
+/* ===========================
+   Mobile
+   =========================== */
+@media (max-width: 768px) {
+  .confirm__inner {
+    padding: 1.25rem;
+  }
+
+  /* Mostrar badge HOJE */
+  .confirm__today-badge {
+    display: inline-block;
+    background-color: #f1f5f9;
+    color: #334155;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .confirm__heading {
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .confirm__title {
+    font-size: 1.25rem;
+  }
+
+  .confirm__subtitle {
+    display: none;
+  }
+
+  /* Esconder detalhes desktop, mostrar rota mobile */
+  .confirm__details {
+    display: none;
+  }
+
+  .confirm__route-mobile {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: left;
+  }
+
+  /* Opções ocupam toda a largura */
+  .confirm__options {
+    gap: 0.5rem;
+  }
+
+  .confirm__option {
+    max-width: none;
+  }
+
+  .confirm__option-label {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 0.625rem;
+    border-width: 1.5px;
+  }
+
+  /* Botões */
+  .confirm__btn-confirm {
+    border-radius: 9999px;
+    max-width: none;
+    font-size: 1rem;
+  }
+
+  .confirm__btn-decline {
+    text-decoration: underline;
+    color: #64748b;
+  }
+}

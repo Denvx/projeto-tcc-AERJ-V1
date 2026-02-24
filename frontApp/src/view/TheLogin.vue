@@ -163,7 +163,7 @@ export default {
       rememberMe: false,
       showPassword: false,
       showResetModal: false,
-      isLoading: false, // ✅ Estado de loading
+      isLoading: false, 
 
       alert: {
         show: false,
@@ -191,7 +191,7 @@ export default {
         'https://ui-avatars.com/api/?name=AERJ&background=198754&color=fff&size=40';
     },
 
-    // ===== INPUT HANDLERS =====
+    //  INPUT HANDLERS =====
 
     onInputEmail() {
       this.email = limitEntry(this.email, LIMITS.EMAIL).trim();
@@ -206,7 +206,7 @@ export default {
       this.errors.password = error;
     },
 
-    // ===== FIELD VALIDATION =====
+    //  FIELD VALIDATION =====
 
     validateField(field) {
       this.touched[field] = true;
@@ -235,7 +235,7 @@ export default {
       return !this.errors.email && !this.errors.password;
     },
 
-    // ===== ALERT SYSTEM =====
+    //  ALERT SYSTEM =====
 
     showAlert(message, type = 'error') {
       this.alert = { show: true, message, type };
@@ -249,7 +249,7 @@ export default {
       this.showAlert(alertData.message, alertData.type);
     },
 
-    // ===== RESET PASSWORD MODAL =====
+    //  RESET PASSWORD MODAL 
 
     openResetModal() {
       this.showResetModal = true;
@@ -305,7 +305,7 @@ export default {
       console.error('Erro no login:', error);
     },
 
-    // ===== SOCIAL LOGIN (FUTURO) =====
+    //  SOCIAL LOGIN (FUTURO) 
 
     loginGoogle() {
       this.showAlert('Login com Google em desenvolvimento.', 'info');

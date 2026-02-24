@@ -1,0 +1,263 @@
+/* ===========================
+   HistoryTable
+   =========================== */
+
+.history {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+.history__header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history__title {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 0.875rem;
+}
+
+.history__view-all {
+  color: #0a111e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.history__view-all:hover {
+  text-decoration: underline;
+}
+
+/* ===========================
+   Tabela (desktop)
+   =========================== */
+.history__table-wrap {
+  overflow-x: auto;
+}
+
+.history__table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.history__table thead {
+  background-color: #f8fafc;
+}
+
+.history__table thead th {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.history__table thead th.text-center { text-align: center; }
+.history__table thead th.text-right  { text-align: right;  }
+
+.history__table tbody tr {
+  border-top: 1px solid #f1f5f9;
+  transition: background-color 0.15s;
+}
+
+.history__table tbody tr:hover {
+  background-color: rgba(248, 250, 252, 0.5);
+}
+
+.history__table td {
+  padding: 1rem 1.5rem;
+}
+
+.history__date   { font-size: 0.875rem; font-weight: 500; color: #334155; }
+.history__route  { font-size: 0.875rem; color: #475569; }
+
+.history__type-cell   { text-align: center; }
+.history__status-cell { text-align: right;  }
+
+.history__type-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: #f1f5f9;
+  color: #475569;
+  border-radius: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.history__status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.history__status-badge--attended { background-color: #dcfce7; color: #15803d; }
+.history__status-badge--absent   { background-color: #f1f5f9; color: #64748b; }
+
+.history__status-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.history__status-dot--attended { background-color: #22c55e; }
+.history__status-dot--absent   { background-color: #94a3b8; }
+
+.history__empty {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+/* ===========================
+   Cards (mobile)
+   =========================== */
+.history__cards {
+  display: none;
+}
+
+.history__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #f1f5f9;
+  transition: background-color 0.15s;
+  cursor: pointer;
+}
+
+.history__card:hover {
+  background-color: #f8fafc;
+}
+
+/* Data */
+.history__card-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.5rem;
+  text-align: center;
+}
+
+.history__card-month {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.history__card-day {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+/* Info */
+.history__card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history__card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.history__card-type {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.history__card-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.history__card-badge--attended {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.history__card-badge--absent {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.history__card-route {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Seta */
+.history__card-arrow {
+  color: #cbd5e1;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Vazio mobile */
+.history__cards-empty {
+  padding: 2.5rem 1.25rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+/* ===========================
+   Responsivo
+   =========================== */
+@media (max-width: 768px) {
+  .history__header {
+    padding: 1rem 1.25rem;
+  }
+
+  .history__title {
+    font-size: 1.125rem;
+    font-weight: 800;
+  }
+
+  .history__view-all {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  /* Esconder tabela, mostrar cards */
+  .history__table-wrap {
+    display: none;
+  }
+
+  .history__cards {
+    display: block;
+  }
+}

@@ -147,4 +147,4 @@ export default {
 };
 </script>
 
-<style src="@/components/LogoutButton.css"></style>
+<style src="@/assets/styles/LogoutButton.css"></style>
