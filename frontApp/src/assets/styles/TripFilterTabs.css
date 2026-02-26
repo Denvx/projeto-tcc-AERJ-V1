@@ -1,0 +1,51 @@
+/* ===========================
+   TripFilterTabs
+   =========================== */
+
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-tabs__btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1.5px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.filter-tabs__btn:hover {
+  border-color: #0a111e;
+  color: #0a111e;
+}
+
+.filter-tabs__btn--active {
+  background-color: #0a111e;
+  border-color: #0a111e;
+  color: #ffffff;
+}
+
+.filter-tabs__btn--active:hover {
+  background-color: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
+}
+
+/* ===========================
+   Mobile
+   =========================== */
+@media (max-width: 768px) {
+  .filter-tabs__btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}

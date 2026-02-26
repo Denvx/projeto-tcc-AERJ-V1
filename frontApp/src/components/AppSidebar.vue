@@ -67,11 +67,11 @@ export default {
   data() {
     return {
       navItems: [
-        { to: '/dashAlunos', icon: 'dashboard', label: 'Dashboard' },
-        { to: '/viagens', icon: 'directions_bus', label: 'Viagens' },
-        { to: '/estatisticas', icon: 'bar_chart', label: 'Estatísticas' },
-        { to: '/perfil', icon: 'person', label: 'Perfil' },
-        { to: '/configuracoes', icon: 'settings', label: 'Configurações' },
+        { to: '/dashAlunos',    icon: 'dashboard', label: 'Dashboard' },
+        { to: '/AlunosViagens', icon: 'directions_bus', label: 'Viagens' },
+        { to: '/estatisticas',  icon: 'bar_chart', label: 'Estatísticas' },
+        { to: '/AlunosPerfil',  icon: 'person', label: 'Perfil' },
+        { to: '/Configuracoes', icon: 'settings', label: 'Configurações' },
       ],
     }
   },

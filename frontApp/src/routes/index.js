@@ -27,6 +27,24 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'AlunosViagens',
+        name: 'AlunosViagens',
+        component: () => import('@/view/Viagens.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'AlunosPerfil',
+        name: 'AlunosPerfil',
+        component: () => import('@/view/Perfil.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'Configuracoes',
+        name: 'Configuracoes',
+        component: () => import('@/view/Configuracoes.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'dashAdmin',
         name: 'dashAdmin',
         component: () => import('@/view/dashAdmin.vue'),

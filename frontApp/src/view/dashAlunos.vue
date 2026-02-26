@@ -83,7 +83,7 @@
           :key="item.to"
           :to="item.to"
           class="bottom-nav__item"
-          active-class="active"
+          :class="{ active: $route.path === item.to }"
         >
           <span class="material-symbols-outlined">{{ item.icon }}</span>
           <span>{{ item.label }}</span>
@@ -136,11 +136,11 @@ export default {
       hasNotifications: true,
 
       navItems: [
-        { to: '/dashAlunos',    icon: 'dashboard',      label: 'Dashboard'    },
-        { to: '/viagens',       icon: 'directions_bus', label: 'Viagens'      },
+        { to: '/dashAlunos',    icon: 'dashboard',      label: 'Início'       },
+        { to: '/AlunosViagens', icon: 'directions_bus', label: 'Viagens'      },
         { to: '/estatisticas',  icon: 'bar_chart',      label: 'Estatísticas' },
-        { to: '/perfil',        icon: 'person',         label: 'Perfil'       },
-        { to: '/configuracoes', icon: 'settings',       label: 'Config'       },
+        { to: '/AlunosPerfil',  icon: 'person',         label: 'Perfil'       },
+        { to: '/Configuracoes',  icon: 'settings',       label: 'Config'       },
       ],
 
       nextTrip: {
@@ -199,7 +199,7 @@ export default {
     },
 
     handleViewAll() {
-      this.$router.push('/viagens')
+      this.$router.push('/AlunosViagens')
     },
   },
 }
