@@ -1,0 +1,121 @@
+/* ===========================
+   NextTripCard
+   =========================== */
+
+.next-trip {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Ícone */
+.next-trip__icon {
+  height: 3.5rem;
+  width: 3.5rem;
+  background-color: rgba(10, 17, 30, 0.05);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a111e;
+  flex-shrink: 0;
+}
+
+.next-trip__icon span {
+  font-size: 1.75rem;
+}
+
+/* Info */
+.next-trip__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.next-trip__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.next-trip__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.next-trip__subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.125rem;
+}
+
+/* Botão — escondido no mobile */
+.next-trip__btn {
+  background-color: #f1f5f9;
+  color: #334155;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.next-trip__btn:hover {
+  background-color: #e2e8f0;
+}
+
+/* ===========================
+   Mobile
+   =========================== */
+@media (max-width: 768px) {
+  .next-trip {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .next-trip__icon {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .next-trip__icon span {
+    font-size: 1.125rem;
+  }
+
+  .next-trip__label {
+    font-size: 0.625rem;
+  }
+
+  .next-trip__title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .next-trip__subtitle {
+    font-size: 0.75rem;
+  }
+
+  /* Esconder botão no mobile */
+  .next-trip__btn {
+    display: none;
+  }
+}

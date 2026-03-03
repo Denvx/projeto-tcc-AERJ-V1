@@ -1,0 +1,107 @@
+/* ===========================
+   PresenceRateCard
+   =========================== */
+
+.presence {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+/* Cabeçalho */
+.presence__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.presence__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.presence__rate {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.presence__goal {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+  text-align: right;
+}
+
+/* Barra de progresso */
+.presence__bar-track {
+  width: 100%;
+  background-color: #f1f5f9;
+  border-radius: 9999px;
+  height: 0.75rem;
+}
+
+.presence__bar-fill {
+  height: 0.75rem;
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+.presence__bar-fill--success {
+  background-color: #22c55e;
+}
+
+.presence__bar-fill--default {
+  background-color: #0a111e;
+}
+
+.presence__bar-fill--danger {
+  background-color: #ef4444;
+}
+
+/* ===========================
+   Mobile
+   =========================== */
+@media (max-width: 768px) {
+  .presence {
+    padding: 1rem;
+  }
+
+  .presence__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .presence__label {
+    font-size: 0.625rem;
+  }
+
+  .presence__rate {
+    font-size: 1.75rem;
+    font-weight: 800;
+  }
+
+  .presence__goal {
+    font-size: 0.7rem;
+    text-align: left;
+    font-style: italic;
+    color: #64748b;
+  }
+
+  .presence__bar-track {
+    height: 0.5rem;
+  }
+
+  .presence__bar-fill {
+    height: 0.5rem;
+  }
+}

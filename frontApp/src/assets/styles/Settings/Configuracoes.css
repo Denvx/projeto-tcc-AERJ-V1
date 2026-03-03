@@ -1,0 +1,255 @@
+/* ===========================
+   Configuracoes - Layout principal
+   =========================== */
+
+.configuracoes {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f6f7f8;
+  overflow-x: hidden;
+}
+
+.configuracoes__main {
+  flex: 1;
+  margin-left: 16rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+.configuracoes__content {
+  padding: 2rem;
+  max-width: 56rem;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Cabeçalho da página */
+.configuracoes__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.configuracoes__heading-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.configuracoes__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.configuracoes__subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.configuracoes__btn-save-top {
+  background-color: #0a111e;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.configuracoes__btn-save-top:hover {
+  background-color: #1e293b;
+}
+
+/* Seções */
+.configuracoes__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Rodapé */
+.configuracoes__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.configuracoes__btn-discard {
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+
+.configuracoes__btn-discard:hover {
+  color: #475569;
+}
+
+.configuracoes__btn-save {
+  background-color: #0a111e;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.configuracoes__btn-save:hover {
+  background-color: #1e293b;
+}
+
+/* ===========================
+   Header mobile
+   =========================== */
+.configuracoes__mobile-header {
+  display: none;
+}
+
+.config-mobile-header {
+  background-color: #ffffff;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.config-mobile-header__back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #0f172a;
+}
+
+.config-mobile-header__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Label de seção mobile */
+.configuracoes__section-label {
+  display: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.75rem 0 0.25rem;
+}
+
+/* Logout mobile */
+.configuracoes__mobile-logout {
+  display: none;
+  width: 100%;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 1.125rem 1.25rem;
+  cursor: pointer;
+  font-family: inherit;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
+}
+
+.configuracoes__mobile-logout span:first-child {
+  color: #ef4444;
+  font-size: 1.25rem;
+}
+
+.configuracoes__mobile-logout-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+/* Nav inferior mobile */
+.configuracoes__bottom-nav {
+  display: none;
+}
+
+/* ===========================
+   Responsivo
+   =========================== */
+@media (max-width: 768px) {
+  .configuracoes {
+    display: block;
+    width: 100%;
+  }
+
+  .configuracoes__sidebar {
+    display: none;
+  }
+
+  .configuracoes__header-desktop {
+    display: none;
+  }
+
+  .configuracoes__main {
+    margin-left: 0;
+    width: 100%;
+    overflow-x: hidden;
+    background-color: #f6f7f8;
+  }
+
+  .configuracoes__mobile-header {
+    display: block;
+  }
+
+  .configuracoes__bottom-nav {
+    display: block;
+  }
+
+  .configuracoes__content {
+    padding: 1rem;
+    padding-bottom: 6rem;
+    max-width: 100%;
+    gap: 0.25rem;
+  }
+
+  /* Esconder elementos desktop */
+  .configuracoes__heading {
+    display: none;
+  }
+
+  .configuracoes__footer {
+    display: none;
+  }
+
+  /* Mostrar labels de seção */
+  .configuracoes__section-label {
+    display: block;
+  }
+
+  /* Mostrar logout */
+  .configuracoes__mobile-logout {
+    display: flex;
+  }
+}

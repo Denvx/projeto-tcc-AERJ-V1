@@ -1,173 +1,73 @@
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
-export const createUserProfile = async (uid, userData) => {
+const userDataCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000;
+
+export async function createUserProfile(uid, userData) {
   try {
-    const userRef = doc(db, "users", uid);
-    await setDoc(userRef, {
+    if (!uid) throw new Error("UID é obrigatório");
+    
+    await setDoc(doc(db, "users", uid), {
       ...userData,
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    return { success: true };
-  } catch (error) {
-    console.error("Erro ao criar perfil:", error);
-    throw error;
-  }
-};
 
-// Buscar perfil do usuário 
-export const getMyProfile = async (uid) => {
+    userDataCache.delete(uid);
+  } catch (error) {
+    console.error("Erro ao criar perfil do usuário:", error);
+    throw new Error(`Falha ao criar perfil: ${error.message}`);
+  }
+}
+
+export async function getUserData(uid, forceRefresh = false) {
   try {
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    
-    if (userSnap.exists()) {
-      return userSnap.data();
-    } else {
-      throw new Error("Perfil não encontrado");
+    if (!uid) {
+      console.warn("getUserData chamado sem UID");
+      return null;
     }
-  } catch (error) {
-    console.error("Erro ao buscar perfil:", error);
-    throw error;
-  }
-};
 
-// Atualizar dados básicos 
-export const updateMyProfile = async (uid, userData) => {
+    if (!forceRefresh && userDataCache.has(uid)) {
+      const cached = userDataCache.get(uid);
+      if (Date.now() - cached.timestamp < CACHE_DURATION) {
+        return cached.data;
+      }
+      userDataCache.delete(uid);
+    }
+
+    const userDoc = await getDoc(doc(db, "users", uid));
+    const data = userDoc.exists() ? userDoc.data() : null;
+
+    if (data) {
+      userDataCache.set(uid, {
+        data,
+        timestamp: Date.now()
+      });
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Erro ao buscar dados do usuário:", error);
+    return null;
+  }
+}
+
+export async function isUserAdmin(uid) {
   try {
-    const userRef = doc(db, "users", uid);
-    const { role, isActive, email, createdAt, ...allowedData } = userData;
-    
-    await updateDoc(userRef, {
-      ...allowedData,
-      updatedAt: new Date()
-    });
-    return { success: true };
+    const userData = await getUserData(uid);
+    return Boolean(userData?.isAdmin);
   } catch (error) {
-    console.error("Erro ao atualizar perfil:", error);
-    throw error;
+    console.error("Erro ao verificar status de admin:", error);
+    return false;
   }
-};
+}
 
-
-/*
- como usar no componente:
-<script>
-// Para operações do próprio usuário
-import { getMyProfile, updateMyProfile } from '@/services/userService';
-
-// Para operações administrativas
-import { 
-  getAllUsers, 
-  getUserProfile, 
-  deleteUser, 
-  setUserAdmin, 
-  toggleUserStatus,
-  getUsersByRole
-} from '@/services/apiService';
-
-export default {
-  data() {
-    return {
-      myProfile: null,
-      users: []
-    };
-  },
-
-  async mounted() {
-    await this.loadMyProfile();
-  },
-
-  methods: {
-    // Carregar perfil do usuário logado
-    async loadMyProfile() {
-      try {
-        const uid = this.$store.state.user.uid; // ou de onde você pega o UID
-        this.myProfile = await getMyProfile(uid);
-      } catch (error) {
-        this.showAlert('Erro ao carregar perfil', 'error');
-      }
-    },
-
-    // Atualizar meu próprio perfil
-    async updateProfile(data) {
-      try {
-        const uid = this.$store.state.user.uid;
-        await updateMyProfile(uid, data);
-        this.showAlert('Perfil atualizado!', 'success');
-      } catch (error) {
-        this.showAlert('Erro ao atualizar perfil', 'error');
-      }
-    },
-
-    // ===== OPERAÇÕES ADMIN (via API) =====
-
-    // Listar todos os usuários
-    async loadAllUsers() {
-      try {
-        const response = await getAllUsers();
-        this.users = response.users;
-      } catch (error) {
-        this.showAlert('Erro ao carregar usuários', 'error');
-      }
-    },
-
-    // Buscar usuário específico
-    async loadUser(uid) {
-      try {
-        const user = await getUserProfile(uid);
-        console.log('Usuário:', user);
-      } catch (error) {
-        this.showAlert('Erro ao carregar usuário', 'error');
-      }
-    },
-
-    // Tornar admin
-    async makeAdmin(uid) {
-      try {
-        await setUserAdmin(uid, true);
-        this.showAlert('Usuário agora é admin!', 'success');
-        await this.loadAllUsers(); // Recarregar lista
-      } catch (error) {
-        this.showAlert('Erro: ' + error.message, 'error');
-      }
-    },
-
-    // Deletar usuário
-    async removeUser(uid) {
-      if (!confirm('Tem certeza que deseja deletar este usuário?')) return;
-      
-      try {
-        await deleteUser(uid);
-        this.showAlert('Usuário deletado!', 'success');
-        await this.loadAllUsers();
-      } catch (error) {
-        this.showAlert('Erro ao deletar: ' + error.message, 'error');
-      }
-    },
-
-    // Ativar/Desativar
-    async toggleStatus(uid, currentStatus) {
-      try {
-        await toggleUserStatus(uid, !currentStatus);
-        this.showAlert('Status atualizado!', 'success');
-        await this.loadAllUsers();
-      } catch (error) {
-        this.showAlert('Erro: ' + error.message, 'error');
-      }
-    },
-
-    // Buscar motoristas
-    async loadDrivers() {
-      try {
-        const response = await getUsersByRole('driver');
-        console.log('Motoristas:', response.users);
-      } catch (error) {
-        this.showAlert('Erro ao buscar motoristas', 'error');
-      }
-    }
+export function clearUserCache(uid = null) {
+  if (uid) {
+    userDataCache.delete(uid);
+  } else {
+    userDataCache.clear();
   }
-};
-</script>
-*/
+}

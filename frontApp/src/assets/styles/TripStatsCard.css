@@ -1,0 +1,96 @@
+/* ===========================
+   TripStatsCard
+   =========================== */
+
+.stats-card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid #f1f5f9;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-card--dark {
+  background-color: #0a111e;
+  border-color: #0a111e;
+}
+
+/* Label */
+.stats-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.stats-card--dark .stats-card__label {
+  color: #94a3b8;
+}
+
+/* Valor */
+.stats-card__value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.stats-card--dark .stats-card__value {
+  color: #ffffff;
+}
+
+/* Ícone */
+.stats-card__icon {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.15;
+}
+
+.stats-card--dark .stats-card__icon {
+  opacity: 0.3;
+  color: #ffffff;
+}
+
+.stats-card__icon span {
+  font-size: 3rem;
+}
+
+/* Cores dos ícones */
+.stats-card__icon--red   { color: #ef4444; opacity: 1; }
+.stats-card__icon--green { color: #22c55e; opacity: 1; }
+
+/* ===========================
+   Mobile
+   =========================== */
+@media (max-width: 768px) {
+  .stats-card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .stats-card__label {
+    font-size: 0.65rem;
+  }
+
+  .stats-card__value {
+    font-size: 2rem;
+  }
+
+  .stats-card__icon span {
+    font-size: 2.25rem;
+  }
+
+  /* Esconder o terceiro card no mobile */
+  .stats-card--hide-mobile {
+    display: none;
+  }
+}
