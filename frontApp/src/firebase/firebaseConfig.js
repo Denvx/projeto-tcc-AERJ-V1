@@ -11,7 +11,16 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
+let app, auth, db;
+let firebaseError = false;
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+} catch (error) {
+  firebaseError = true;
+  console.error("Firebase init failed:", error.message);
+}
+
+export { auth, db, firebaseError };

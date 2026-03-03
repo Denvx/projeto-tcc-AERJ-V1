@@ -142,9 +142,10 @@
 <script>
 import AppSidebar      from '@/components/AppSidebar.vue'
 import AppHeader       from '@/components/AppHeader.vue'
-import TripStatsCard   from '@/components/TripStatsCard.vue'
-import TripFilterTabs  from '@/components/TripFilterTabs.vue'
-import TripListItem    from '@/components/TripListItem.vue'
+
+import TripStatsCard   from '@/components/viagenComponents/TripStatsCard.vue'
+import TripFilterTabs  from '@/components/viagenComponents/TripFilterTabs.vue'
+import TripListItem    from '@/components/viagenComponents/TripListItem.vue'
 
 export default {
   name: 'AlunosViagens',
