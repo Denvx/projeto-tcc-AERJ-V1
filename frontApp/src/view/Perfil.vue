@@ -108,8 +108,9 @@
 <script>
 import AppSidebar   from '@/components/AppSidebar.vue'
 import AppHeader    from '@/components/AppHeader.vue'
-import ProfileCard  from '@/components/ProfileCard.vue'
-import ProfileInfo  from '@/components/ProfileInfo.vue'
+
+import ProfileCard  from '@/components/perfilComponents/ProfileCard.vue'
+import ProfileInfo  from '@/components/perfilComponents/ProfileInfo.vue'
 
 export default {
   name: 'AlunosPerfil',

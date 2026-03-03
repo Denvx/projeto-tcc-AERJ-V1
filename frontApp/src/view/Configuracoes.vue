@@ -161,8 +161,9 @@
 <script>
 import AppSidebar      from '@/components/AppSidebar.vue'
 import AppHeader       from '@/components/AppHeader.vue'
-import SettingsSection from '@/components/Settings/SettingsSection.vue'
-import SettingsToggle  from '@/components/Settings/SettingsToggle.vue'
+
+import SettingsSection from '@/components/settingComponents/SettingsSection.vue'
+import SettingsToggle  from '@/components/settingComponents/SettingsToggle.vue'
 
 export default {
   name: 'AlunoConfiguracoes',

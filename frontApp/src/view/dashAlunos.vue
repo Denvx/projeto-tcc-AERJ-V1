@@ -97,10 +97,11 @@
 <script>
 import AppSidebar       from '@/components/AppSidebar.vue'
 import AppHeader        from '@/components/AppHeader.vue'
-import NextTripCard     from '@/components/NextTripCard.vue'
-import PresenceRateCard from '@/components/PresenceRateCard.vue'
-import ConfirmPresence  from '@/components/ConfirmPresence.vue'
-import HistoryTable     from '@/components/HistoryTable.vue'
+
+import NextTripCard     from '@/components/dashComponents/NextTripCard.vue'
+import PresenceRateCard from '@/components/dashComponents/PresenceRateCard.vue'
+import ConfirmPresence  from '@/components/dashComponents/ConfirmPresence.vue'
+import HistoryTable     from '@/components/dashComponents/HistoryTable.vue'
 
 export default {
   name: 'DashAlunos',

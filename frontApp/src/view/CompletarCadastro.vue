@@ -30,7 +30,7 @@
         </p>
 
         <!-- Step Indicator -->
-        <div class="step-indicator mb-4">
+        <div class="step-indicator mb-4 justify-content-center">
           <div v-for="step in 3" :key="step" class="step-group">
             <div class="step-circle" :class="{ active: currentStep >= step }">
               <i v-if="currentStep > step" class="bi bi-check-lg"></i>
