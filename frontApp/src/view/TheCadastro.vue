@@ -7,19 +7,13 @@
         <p class="text-secondary mb-4">Preencha os dados para se cadastrar</p>
 
         <form @submit.prevent="handleRegistration">
-          <!-- Nome Completo -->
+
+          <!-- Nome -->
           <div class="mb-3">
-            <label for="fullName" class="form-label">Nome Completo *</label>
-            <div class="input-group">
-              <input type="text" id="fullName" v-model="fullName"
-                @blur="validateField('fullName')"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', { 'is-invalid': errors.fullName, 'is-valid': touched.fullName && !errors.fullName && fullName }]"
-                placeholder="Digite seu nome completo">
-              <span v-if="errors.fullName" class="input-group-text bg-dark border-secondary text-danger">
-                <i class="bi bi-exclamation-circle-fill"></i>
-              </span>
-             
-            </div>
+            <label class="form-label">Nome Completo *</label>
+            <input type="text" v-model="fullName" @input="onInputFullName" @blur="validateField('fullName')"
+              :class="inputClass('fullName')" placeholder="Digite seu nome completo" />
+
             <div v-if="errors.fullName" class="invalid-feedback d-block">
               {{ errors.fullName }}
             </div>
@@ -27,101 +21,62 @@
 
           <!-- Apelido -->
           <div class="mb-3">
-            <label for="nickname" class="form-label">Apelido</label>
-            <input type="text" id="nickname" v-model="nickname" class="form-control bg-dark text-white border-secondary"
-              placeholder="Como gostaria de ser chamado (opcional)">
+            <label class="form-label">Apelido</label>
+            <input type="text" v-model="nickname" @input="onInputNickname"
+              class="form-control bg-dark text-white border-secondary"
+              placeholder="Como gostaria de ser chamado (opcional)" />
           </div>
 
+          <!-- Email -->
           <div class="mb-3">
-            <label for="email" class="form-label">Email *</label>
-            <div class="input-group">
-              <input type="email" id="email" v-model="email"
-                @input="validateEmailRealTime"
-                @blur="validateField('email')"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
-                  { 'is-invalid': errors.email, 
-                    'is-valid': touched.email && !errors.email && email }]"
-                placeholder="seu.email@example.com">
-              <span v-if="errors.email" class="input-group-text bg-dark border-secondary text-danger">
-                <i class="bi bi-exclamation-circle-fill"></i>
-              </span>
-            </div>
+            <label class="form-label">Email *</label>
+
+            <input type="email" v-model="email" @input="onInputEmail" @blur="validateField('email')"
+              :class="inputClass('email')" placeholder="seu.email@example.com" />
+
             <div v-if="errors.email" class="invalid-feedback d-block">
               {{ errors.email }}
             </div>
-            <div v-else-if="email && !isEmailValid && touched.email" class="text-warning small mt-1">
-              <i class="bi bi-info-circle"></i> Digite um email válido
-            </div>
-            <div v-else-if="isEmailValid && email" class="text-success small mt-1">
+
+            <div v-else-if="touched.email && isEmailValid === true" class="text-success small mt-1">
+
               <i class="bi bi-check-circle"></i> Email válido!
             </div>
           </div>
 
           <!-- Senha -->
           <div class="mb-3">
-            <label for="password" class="form-label">Senha *</label>
-            <div class="input-group">
-              <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password"
-                @input="validatePasswordRealTime"
-                @blur="validateField('password')"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
-                  { 'is-invalid': errors.password,
-                    'is-valid': touched.password && !errors.password && password.length >= 6 }]"
-                placeholder="••••••••">
-              <button class="btn btn-outline-secondary bg-dark text-white border-secondary" type="button"
-                @click="showPassword = !showPassword">
-                <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-              </button>
-              <span v-if="errors.password" class="input-group-text bg-dark border-secondary text-danger">
-                <i class="bi bi-exclamation-circle-fill"></i>
-              </span>
-            </div>
+            <label class="form-label">Senha *</label>
+            <input :type="showPassword ? 'text' : 'password'" v-model="password" @input="onInputPassword"
+              @blur="validateField('password')" :class="inputClass('password')" placeholder="••••••••" />
+
             <div v-if="errors.password" class="invalid-feedback d-block">
               {{ errors.password }}
             </div>
-            
-            <div v-if="password && touched.password" class="mt-2">
-              <div class="d-flex gap-1 mb-1">
-                <div class="flex-fill" :class="['password-strength-bar', passwordStrength >= 1 ? 'bg-danger' : 'bg-secondary']"></div>
-                <div class="flex-fill" :class="['password-strength-bar', passwordStrength >= 2 ? 'bg-warning' : 'bg-secondary']"></div>
-                <div class="flex-fill" :class="['password-strength-bar', passwordStrength >= 3 ? 'bg-success' : 'bg-secondary']"></div>
-              </div>
-              <small :class="passwordStrengthText.class">{{ passwordStrengthText.text }}</small>
-            </div>
           </div>
 
-          <!-- Confirmar Senha -->
+          <!-- Confirmar -->
           <div class="mb-3">
-            <label for="confirmPassword" class="form-label">Confirmar Senha *</label>
-            <div class="input-group">
-              <input :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" v-model="confirmPassword"
-                @input="validateConfirmPasswordRealTime"
-                @blur="validateField('confirmPassword')"
-                :class="['form-control', 'bg-dark', 'text-white', 'border-secondary', 
-                  { 'is-invalid': errors.confirmPassword,
-                    'is-valid': touched.confirmPassword && !errors.confirmPassword && confirmPassword && password === confirmPassword }]"
-                placeholder="••••••••">
-              <button class="btn btn-outline-secondary bg-dark text-white border-secondary" type="button"
-                @click="showConfirmPassword = !showConfirmPassword">
-                <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-              </button>
-              <span v-if="errors.confirmPassword" class="input-group-text bg-dark border-secondary text-danger">
-                <i class="bi bi-exclamation-circle-fill"></i>
-              </span>
-            
-            </div>
+            <label class="form-label">Confirmar Senha *</label>
+            <input :type="showConfirmPassword ? 'text' : 'password'" v-model="confirmPassword"
+              @input="onInputConfirmPassword" @blur="validateField('confirmPassword')"
+              :class="inputClass('confirmPassword')" placeholder="••••••••" />
+
             <div v-if="errors.confirmPassword" class="invalid-feedback d-block">
               {{ errors.confirmPassword }}
             </div>
-            <div v-else-if="confirmPassword && password !== confirmPassword && touched.confirmPassword" class="text-warning small mt-1">
-              <i class="bi bi-exclamation-triangle"></i> As senhas não coincidem
-            </div>
-            <div v-else-if="password === confirmPassword && confirmPassword" class="text-success small mt-1">
+
+            <div v-else-if="
+              touched.confirmPassword &&
+              confirmPassword &&
+              password === confirmPassword
+            " class="text-success small mt-1">
               <i class="bi bi-check-circle"></i> Senhas coincidem!
             </div>
+
           </div>
 
-          <button type="submit" class="btn btn-success w-100 mt-3">
+          <button class="btn btn-success w-100 mt-3">
             <i class="fas fa-user-plus"></i> Cadastrar
           </button>
         </form>
@@ -132,6 +87,7 @@
         </p>
       </div>
 
+      <!-- Coluna Direita - Informações -->
       <div class="col-md-6 bg-success text-white p-5 d-flex flex-column justify-content-center">
         <h4 class="fw-bold mb-4">AERJ.</h4>
         <blockquote class="fs-5 fst-italic">
@@ -151,29 +107,29 @@
             <span class="text-white-50 small">Soluções Inteligentes para Mobilidade</span>
           </p>
           <div class="d-flex align-items-center gap-2 mt-3">
-            <img v-for="(avatar, index) in teamAvatars" 
-                 :key="index" 
-                 :src="avatar" 
-                 class="rounded-circle border border-white" 
-                 width="40"
-                 height="40" 
-                 alt="Team member"
-                 @error="handleImageError">
+            <img v-for="(avatar, index) in teamAvatars" :key="index" :src="avatar"
+              class="rounded-circle border border-white" width="40" height="40" alt="Team member"
+              @error="handleImageError">
           </div>
         </div>
       </div>
 
     </div>
-  </div>
-  <div v-if="alert.show" class="alert-toast" :class="alert.type">
-    {{ alert.message }}
+
+    <div v-if="alert.show" class="alert-toast" :class="alert.type">
+      {{ alert.message }}
+    </div>
   </div>
 </template>
 
 <script>
-import { registerAuth } from "@/services/authService";
-import { createUserProfile } from "@/services/userService";
+import { registerAuth } from '@/services/authService';
+import { createUserProfile } from '@/services/userService';
 import denver from '@/assets/images/denver.jpg';
+
+import { limitEntry } from '@/utils/helpers/limitEntry';
+import { LIMITS } from '@/utils/validators/limits';
+import { validateEmail } from '@/utils/validators/email';
 
 export default {
   name: 'CadastroAERJ',
@@ -185,19 +141,18 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
+
+      isEmailValid: null,
       showPassword: false,
       showConfirmPassword: false,
-      isEmailValid: false,
 
       alert: {
         show: false,
         message: '',
         type: ''
       },
-      
-      teamAvatars: [
-        denver
-      ],
+
+      teamAvatars: [denver],
 
       errors: {
         fullName: '',
@@ -215,168 +170,106 @@ export default {
     };
   },
 
-  computed: {
-    passwordStrength() {
-      if (!this.password) return 0;
-      
-      let strength = 0;
-      
-      if (this.password.length >= 6) strength++;
-      if (this.password.length >= 8) strength++;
-      if (/[A-Z]/.test(this.password) && /[a-z]/.test(this.password)) strength++;
-      if (/[0-9]/.test(this.password)) strength++;
-      if (/[^A-Za-z0-9]/.test(this.password)) strength++;
-      
-      return Math.min(strength, 3);
-    },
-
-    passwordStrengthText() {
-      const texts = {
-        0: { text: '', class: '' },
-        1: { text: 'Senha fraca', class: 'text-danger' },
-        2: { text: 'Senha média', class: 'text-warning' },
-        3: { text: 'Senha forte', class: 'text-success' }
-      };
-      return texts[this.passwordStrength];
-    }
-  },
-
   methods: {
-    handleImageError(event) {
-      console.error('Erro ao carregar imagem:', event.target.src);
-      event.target.src = 'https://via.placeholder.com/40';
+    inputClass(field) {
+      return [
+        'form-control',
+        'bg-dark',
+        'text-white',
+        'border-secondary',
+        {
+          'is-invalid': this.errors[field],
+          'is-valid': this.touched[field] && !this.errors[field] && this[field]
+        }
+      ];
     },
 
-    showAlert(message, type = 'error') {
-      this.alert.message = message;
-      this.alert.type = type;
-      this.alert.show = true;
-
-      setTimeout(() => {
-        this.alert.show = false;
-      }, 3000);
+    onInputFullName() {
+      this.fullName = limitEntry(this.fullName, LIMITS.NAME);
+      this.touched.fullName = true;
+      this.errors.fullName = '';
     },
 
-    validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
+    onInputNickname() {
+      this.nickname = limitEntry(this.nickname, LIMITS.NICKNAME);
     },
 
-    // Validação de email em tempo real
-    validateEmailRealTime() {
+    onInputEmail() {
       this.touched.email = true;
-      this.isEmailValid = this.validateEmail(this.email);
-      
-      if (this.email && !this.isEmailValid) {
-        this.errors.email = '';
-      } else {
-        this.errors.email = '';
-      }
-    },
 
-    // Validação de senha em tempo real
-    validatePasswordRealTime() {
+      const { isValid, error } = validateEmail(this.email);
+
+      this.isEmailValid = isValid;
+      this.errors.email = error;
+    }
+    ,
+
+    onInputPassword() {
+      this.password = limitEntry(this.password, LIMITS.PASSWORD);
       this.touched.password = true;
-      
-      if (this.password && this.password.length < 6) {
-        this.errors.password = '';
-      } else {
-        this.errors.password = '';
-      }
+      this.errors.password = '';
 
-      // Revalidar confirmação se já foi preenchida
-      if (this.confirmPassword) {
-        this.validateConfirmPasswordRealTime();
-      }
+      if (this.confirmPassword) this.validateField('confirmPassword');
     },
 
-    // Validação de confirmação de senha em tempo real
-    validateConfirmPasswordRealTime() {
+    onInputConfirmPassword() {
       this.touched.confirmPassword = true;
-      
-      if (this.confirmPassword && this.password !== this.confirmPassword) {
-        this.errors.confirmPassword = '';
+
+      if (!this.confirmPassword) {
+        this.errors.confirmPassword = 'Confirme sua senha';
+        return;
+      }
+
+      if (this.confirmPassword !== this.password) {
+        this.errors.confirmPassword = 'As senhas não coincidem';
       } else {
         this.errors.confirmPassword = '';
       }
-    },
+    }
+    ,
 
-    // Validação ao sair do campo
     validateField(field) {
       this.touched[field] = true;
 
-      switch(field) {
+      switch (field) {
         case 'fullName':
-          if (!this.fullName.trim()) {
-            this.errors.fullName = 'Por favor, insira seu nome completo';
-          } else {
-            this.errors.fullName = '';
-          }
+          this.errors.fullName =
+            this.fullName.trim().length >= 3
+              ? ''
+              : 'Informe seu nome completo';
           break;
-        
-        case 'email':
-          if (!this.email) {
-            this.errors.email = 'Email é obrigatório';
-          } else if (!this.validateEmail(this.email)) {
-            this.errors.email = 'Email inválido';
-          } else {
-            this.errors.email = '';
-          }
+
+        case 'email': {
+          const { isValid, error } = validateEmail(this.email);
+          this.errors.email = isValid ? '' : error;
           break;
-        
+        }
+
         case 'password':
-          if (!this.password) {
-            this.errors.password = 'Senha é obrigatória';
-          } else if (this.password.length < 6) {
-            this.errors.password = 'Senha deve ter no mínimo 6 caracteres';
-          } else {
-            this.errors.password = '';
-          }
+          if (!this.password) this.errors.password = 'Senha obrigatória';
+          else if (this.password.length < 6)
+            this.errors.password = 'Mínimo 6 caracteres';
+          else this.errors.password = '';
           break;
-        
+
         case 'confirmPassword':
-          if (!this.confirmPassword) {
+          if (!this.confirmPassword)
             this.errors.confirmPassword = 'Confirme sua senha';
-          } else if (this.password !== this.confirmPassword) {
+          else if (this.password !== this.confirmPassword)
             this.errors.confirmPassword = 'As senhas não coincidem';
-          } else {
-            this.errors.confirmPassword = '';
-          }
+          else this.errors.confirmPassword = '';
           break;
       }
     },
 
     validateForm() {
-      this.errors = {
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      };
+      ['fullName', 'email', 'password', 'confirmPassword'].forEach(this.validateField);
+      return !Object.values(this.errors).some(e => e);
+    },
 
-      let valid = true;
-
-      if (!this.fullName.trim()) {
-        this.errors.fullName = 'Por favor, insira seu nome completo';
-        valid = false;
-      }
-
-      if (!this.email || !this.validateEmail(this.email)) {
-        this.errors.email = 'Email inválido';
-        valid = false;
-      }
-
-      if (!this.password || this.password.length < 6) {
-        this.errors.password = 'Senha deve ter no mínimo 6 caracteres';
-        valid = false;
-      }
-
-      if (this.password !== this.confirmPassword) {
-        this.errors.confirmPassword = 'As senhas não coincidem';
-        valid = false;
-      }
-
-      return valid;
+    showAlert(message, type = 'error') {
+      this.alert = { show: true, message, type };
+      setTimeout(() => (this.alert.show = false), 3000);
     },
 
     async handleRegistration() {
@@ -393,21 +286,18 @@ export default {
         });
 
         this.showAlert('Cadastro realizado com sucesso!', 'success');
+        setTimeout(() => this.$router.push({ name: 'login' }), 1500);
 
-        setTimeout(() => {
-          this.$router.push({ name: 'login' });
-        }, 1500);
-
-      } catch (error) {
-        if (error.code === 'auth/email-already-in-use') {
+      } catch (err) {
+        if (err.code === 'auth/email-already-in-use') {
           this.showAlert('Este e-mail já está cadastrado.', 'error');
-        } else if (error.code === 'auth/invalid-email') {
+        } else if (err.code === 'auth/invalid-email') {
           this.showAlert('E-mail inválido.', 'error');
-        } else if (error.code === 'auth/weak-password') {
+        } else if (err.code === 'auth/weak-password') {
           this.showAlert('Senha muito fraca.', 'error');
         } else {
           this.showAlert('Erro inesperado. Tente novamente.', 'error');
-          console.error(error);
+          console.log(err);
         }
       }
     }
@@ -416,11 +306,3 @@ export default {
 </script>
 
 <style src="@/assets/styles/cadastro.css"></style>
-
-<style scoped>
-.password-strength-bar {
-  height: 4px;
-  border-radius: 2px;
-  transition: background-color 0.3s ease;
-}
-</style>

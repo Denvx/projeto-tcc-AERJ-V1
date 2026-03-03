@@ -33,10 +33,10 @@
                         Enviando...
                     </span>
                     <span v-else>
-                        <i class="bi bi-envelope"></i> Enviar
+                        <i class="bi fw-bold bi-envelope"></i> Enviar
                     </span>
                 </button>
-                <button class="btn btn-outline-light w-100" @click="closeModal" :disabled="sending">
+                <button class="btn fw-bold btn-cancel btn-outline-light w-100" @click="closeModal" :disabled="sending">
                     Cancelar
                 </button>
             </div>
@@ -68,7 +68,6 @@ export default {
     watch: {
         show(newVal) {
             if (!newVal) {
-                // Reseta os campos quando o modal é fechado
                 this.email = '';
                 this.isEmailValid = false;
                 this.touched = false;
@@ -139,8 +138,6 @@ export default {
                     message,
                     type: 'error'
                 });
-
-                console.error('Erro ao enviar email de recuperação:', error);
             } finally {
                 this.sending = false;
             }

@@ -1,0 +1,49 @@
+/* ===========================
+   SettingsSection
+   =========================== */
+
+/* Desktop */
+.settings-section {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid #f1f5f9;
+  padding: 1.5rem;
+}
+
+.settings-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.settings-section__icon {
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+}
+
+.settings-section__icon span {
+  font-size: 1.25rem;
+}
+
+.settings-section__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ===========================
+   Mobile
+   =========================== */
+@media (max-width: 768px) {
+  .settings-section {
+    padding: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .settings-section__header {
+    display: none;
+  }
+}
