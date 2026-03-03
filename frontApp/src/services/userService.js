@@ -63,6 +63,17 @@ export async function isUserAdmin(uid) {
   }
 }
 
+//varifica se o usuario é um DEV
+export async function isUserDev(uid) {
+  try {
+    const userData = await getUserData(uid);
+    return Boolean(userData?.isDev);
+  } catch (error) {
+    console.error("Erro ao verificar status de dev:", error);
+    return false;
+  }
+}
+
 export function clearUserCache(uid = null) {
   if (uid) {
     userDataCache.delete(uid);

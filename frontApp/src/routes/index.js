@@ -21,6 +21,12 @@ const routes = [
         meta: { requiresGuest: true }
       },
       {
+        path: 'completaCadastro',
+        name: 'completarCadastro',
+        component: () => import('@/view/CompletarCadastro.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'dashAlunos',
         name: 'dashAlunos',
         component: () => import('@/view/dashAlunos.vue'),
@@ -49,7 +55,13 @@ const routes = [
         name: 'dashAdmin',
         component: () => import('@/view/dashAdmin.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
-      }
+      }/*,
+      {
+        path: 'dashDev',
+        name: 'dashDev',
+        component: () => import('@/view/dashDev.vue'),
+        meta: { requiresAuth: true, requiresDev: true }
+      }*/
     ]
   },
   {
