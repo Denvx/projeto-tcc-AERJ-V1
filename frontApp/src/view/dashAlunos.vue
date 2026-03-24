@@ -119,12 +119,12 @@ export default {
     return {
       sidebarUser: {
         name: 'Ricardo Silva',
-        role: 'Pai do Aluno',
+        role: 'Passageiro',
         avatar: '',
       },
 
       headerUser: {
-        name: 'Maria Silva Santos',
+        name: 'Ricardo Silva',
         role: 'Passageiro',
         avatar: '',
       },
@@ -159,10 +159,7 @@ export default {
 
       tripHistory: [
         { date: '14/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
-        { date: '12/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
         { date: '09/02/2024', route: 'Centro → Barra', type: 'Só Ida',      attended: false },
-        { date: '07/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
-        { date: '05/02/2024', route: 'Centro ↔ Barra', type: 'Ida e Volta', attended: true  },
       ],
     }
   },

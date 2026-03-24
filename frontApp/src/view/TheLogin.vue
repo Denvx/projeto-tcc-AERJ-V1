@@ -74,8 +74,10 @@
           </div>
 
 
-          <button type="submit" class="btn btn-success w-100 mt-3">
-            <i class="fas fa-sign-in-alt"></i> Entrar
+          <button type="submit" class="btn btn-success w-100 mt-3" :disabled="isLoading">
+            <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            <i v-else class="fas fa-sign-in-alt me-2"></i>
+            {{ isLoading ? 'Entrando...' : 'Entrar' }}
           </button>
         </form>
 
@@ -149,6 +151,8 @@ import { LIMITS } from '@/utils/validators/limits';
 import { validateEmail } from '@/utils/validators/email';
 import { validatePassword } from '@/utils/validators/password';
 
+import { getStatusCadastro } from '@/services/studentApiService';
+
 export default {
   name: 'LoginAERJ',
 
@@ -163,7 +167,7 @@ export default {
       rememberMe: false,
       showPassword: false,
       showResetModal: false,
-      isLoading: false, 
+      isLoading: false,
 
       alert: {
         show: false,
@@ -268,14 +272,29 @@ export default {
       this.isLoading = true;
 
       try {
+        // 1. Autentica no Firebase
         const user = await loginAuth(this.email, this.password);
         const userData = await getUserData(user.uid);
 
         if (!userData) {
           throw new Error('Perfil do usuário não encontrado');
         }
+
+        // 2. Verifica statusCadastro na API Java
+        const statusCadastro = await getStatusCadastro(user.email);
+        console.log('[Login] statusCadastro:', statusCadastro);
+
+        // 3. Cadastro incompleto → redireciona para completar
+        if (statusCadastro === 404 /*'NAO_CADASTRADO'*/ || statusCadastro === 'INCOMPLETO') {
+          this.showAlert('Complete seu cadastro para continuar.', 'warning');
+          setTimeout(() => {
+            this.$router.push({ name: 'completarCadastro' });
+          }, 1000);
+          return;
+        }
+
+        // 4. Cadastro completo → verifica role e redireciona
         this.showAlert('Login realizado com sucesso!', 'success');
-        
         setTimeout(() => {
           const targetRoute = userData.isAdmin ? 'dashAdmin' : 'dashAlunos';
           this.$router.push({ name: targetRoute });
@@ -300,9 +319,8 @@ export default {
       };
 
       const message = errorMessages[error.code] || 'Erro ao fazer login. Tente novamente.';
-      
       this.showAlert(message);
-      console.error('Erro no login:', error);
+      console.error('[Login] Erro:', error);
     },
 
     //  SOCIAL LOGIN (FUTURO) 
